@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance</title>
+  <link rel="stylesheet" href="./css/student.css">
+</head>
+
+<body>
+  <header>
+    <img src="./images/logo2.png" alt="School Logo" class="logo">
+    <h1>Campus Space</h1>
+  </header>
+  <main>
+
+    <div class="container">
+      <div class="component">
+        <h2>Attendance</h2>
+        <div class="chart-container">
+          <canvas id="attendanceChart"></canvas>
+        </div>
+        <div id="chartLabels">
+          <p>Total Lectures: <span id="totalLectures">
+              <%= total %>
+            </span></p>
+          <p>Present: <span id="presentCount">
+              <%= present %>
+            </span></p>
+          <p>Absent: <span id="absentCount">
+              <%= absent %>
+            </span></p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    var Present = '<%= JSON.stringify(present) %>';
+    var Absent = '<%= JSON.stringify(absent) %>';
+    var Total = '<%= JSON.stringify(total) %>';
+    Present = (Present / Total) * 100;
+    Absent = 100 - Present;
+    const attendanceData = {
+      present: Present,
+      absent: Absent
+    };
+    const chartConfig = {
+      type: 'pie',
+      data: {
+        labels: ['Absent %', 'Present %'],
+        datasets: [{
+          data: [
+            attendanceData.absent,
+            attendanceData.present,
+          ],
+          backgroundColor: ['#ff6384', '#36a2eb', '#ffce56']
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        title: {
+          display: true,
+          text: 'Attendance Breakdown'
+        }
+      }
+    };
+
+    const ctx = document.getElementById('attendanceChart').getContext('2d');
+    new Chart(ctx, chartConfig);
+  </script>
+
+</body>
+
+</html>
